@@ -9,6 +9,14 @@ function loadBeers(beers) {
   beerList.innerHTML = _.template(beerTemplate)({ beers: beers });
 }
 
+function setActiveFilter(active) {
+  for (i=0; i<filterLinks.length; i++) {
+    filterLinks[i].classList.remove('btn-active');
+  }
+
+  active.classList.add('btn-active');
+}
+
 loadBeers(beers)
 
 filters.addEventListener('click', function (e) {
@@ -18,11 +26,7 @@ filters.addEventListener('click', function (e) {
   var filteredBeers = [];
   var i;
 
-  for (i=0; i<filterLinks.length; i++) {
-    filterLinks[i].classList.remove('btn-active');
-  }
-
-  clicked.classList.add('btn-active');
+  setActiveFilter(clicked)
 
   switch (filter) {
     case 'all':

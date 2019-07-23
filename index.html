@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Functional JS</title>
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href='http://fonts.googleapis.com/css?family=Rye' rel='stylesheet' type='text/css'>
+    <link href="bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href='rye.css' rel='stylesheet' type='text/css'>
     <link href='style.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -12,9 +12,9 @@
         <header class="site-header">
             <a href="/" class="header-logo fancy">( McCarthy's Pub )</a>
         </header>
-        
+
         <h1 class="fancy">Beer List</h1>
-        
+
          <div id="filters">
             <a href="#" class="btn btn-default btn-active" data-filter="all">All</a>
             <a href="#" class="btn btn-default" data-filter="domestic">Domestic</a>
@@ -23,9 +23,9 @@
             <a href="#" class="btn btn-default" data-filter="lager">Lagers</a>
             <a href="#" class="btn btn-default" data-filter="stout">Stouts</a>
         </div>
-        
+
         <ul id="beerList"></ul>
-        
+
         <script type="text/json" id="beerData">
         {
             "beers": [
@@ -40,21 +40,21 @@
                 {"name": "Samwell Winter Ale", "type": "ale", "locale": "import", "abv": 6.8},
                 {"name": "Sparkwood Beer Five", "type": "lager", "locale": "domestic", "abv": 6.2},
                 {"name": "Sparkwood Campfire Lager", "type": "lager", "locale": "domestic", "abv": 5.8},
-                {"name": "Tartan Scottish Ale", "type": "ale", "locale": "import", "abv": 7.5} 
+                {"name": "Tartan Scottish Ale", "type": "ale", "locale": "import", "abv": 7.5}
             ]
         }
         </script>
-        
+
         <script type="text/template" id="tmpl-beer">
         <% _.forEach(beers, function (beer) { %>
         <li><%= beer.name %> <small>(<%= beer.abv %>%)</small></li>
         <% }); %>
         </script>
-        
+
     </div>
 
-    <script src="https://rawgit.com/lodash/lodash/3.0.1/lodash.min.js"></script>
-    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="lodash.min.js"></script>
+    <script src="jquery.min.js"></script>
     <script src="app.js"></script>
 
 </body>

@@ -39,19 +39,6 @@ var filterByLocale = makeFilter('locale')
 
 var filterByType = makeFilter('type')
 
-// function compareValue(item, property, value) {
-//   if (!Array.isArray(value)) {
-//     return (item[property] === value)
-//   }
-//
-//   for (var i = 0; i<value.length;i++) {
-//     if (item[property] === value[i]) {
-//       return true
-//     }
-//   }
-//   return false
-// }
-
 loadBeers(beers)
 
 filters.addEventListener('click', function (e) {
@@ -74,7 +61,9 @@ filters.addEventListener('click', function (e) {
       filteredBeers = filterByLocale('import')
       break;
     case 'ale':
-      filteredBeers = filterByType(['ipa','ale'])
+      filteredBeers = filterBeers(function (beer) {
+        return beer.type === 'ipa' || beer.type === 'ale'
+      })
       break;
     case 'lager':
       filteredBeers = filterByType('lager')

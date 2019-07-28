@@ -1,5 +1,5 @@
 var beerData = JSON.parse(document.getElementById("beerData").textContent);
-var beers = beerData.beers;
+var allBeers = beerData.beers;
 var beerTemplate = document.getElementById("tmpl-beer").textContent;
 var beerList = document.getElementById("beerList");
 var filters = document.getElementById("filters");
@@ -17,7 +17,7 @@ function setActiveFilter(active) {
   active.classList.add('btn-active');
 }
 
-function filterBeers(callback) {
+function filterBeers(beers, callback) {
   var filteredBeers = []
   for (i=0; i<beers.length; i++) {
     if (callback(beers[i])) {
@@ -27,19 +27,19 @@ function filterBeers(callback) {
   return filteredBeers
 }
 
-function makeFilter(property) {
+function makeFilter(beers, property) {
   return function (value) {
-    return filterBeers(function (beer) {
+    return filterBeers(beers, function (beer) {
       return beer[property] === value
     })
   }
 }
 
-var filterByLocale = makeFilter('locale')
+var filterByLocale = makeFilter(allBeers, 'locale')
 
-var filterByType = makeFilter('type')
+var filterByType = makeFilter(allBeers, 'type')
 
-loadBeers(beers)
+loadBeers(allBeers)
 
 filters.addEventListener('click', function (e) {
   e.preventDefault();
@@ -52,7 +52,7 @@ filters.addEventListener('click', function (e) {
 
   switch (filter) {
     case 'all':
-      filteredBeers = beers;
+      filteredBeers = allBeers;
       break;
     case 'domestic':
       filteredBeers = filterByLocale('domestic')
@@ -61,7 +61,7 @@ filters.addEventListener('click', function (e) {
       filteredBeers = filterByLocale('import')
       break;
     case 'ale':
-      filteredBeers = filterBeers(function (beer) {
+      filteredBeers = filterBeers(allBeers, function (beer) {
         return beer.type === 'ipa' || beer.type === 'ale'
       })
       break;

@@ -17,10 +17,10 @@ function setActiveFilter(active) {
   active.classList.add('btn-active');
 }
 
-function filterBeers(property, value) {
+function filterBeers(callback) {
   var filteredBeers = []
   for (i=0; i<beers.length; i++) {
-    if (compareValue(beers[i], property, value)) {
+    if (callback(beers[i])) {
       filteredBeers.push(beers[i]);
     }
   }
@@ -29,7 +29,9 @@ function filterBeers(property, value) {
 
 function makeFilter(property) {
   return function (value) {
-    return filterBeers(property, value)
+    return filterBeers(function (beer) {
+      return beer[property] === value
+    })
   }
 }
 
@@ -37,18 +39,18 @@ var filterByLocale = makeFilter('locale')
 
 var filterByType = makeFilter('type')
 
-function compareValue(item, property, value) {
-  if (!Array.isArray(value)) {
-    return (item[property] === value)
-  }
-
-  for (var i = 0; i<value.length;i++) {
-    if (item[property] === value[i]) {
-      return true
-    }
-  }
-  return false
-}
+// function compareValue(item, property, value) {
+//   if (!Array.isArray(value)) {
+//     return (item[property] === value)
+//   }
+//
+//   for (var i = 0; i<value.length;i++) {
+//     if (item[property] === value[i]) {
+//       return true
+//     }
+//   }
+//   return false
+// }
 
 loadBeers(beers)
 

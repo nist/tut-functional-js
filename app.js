@@ -6,6 +6,8 @@ var averageAbv = document.getElementById('averageAbv')
 var filters = document.getElementById('filters')
 var filterLinks = filters.querySelectorAll('a')
 
+var fp = {}
+
 function loadBeers (beers) {
   beerList.innerHTML = _.template(beerTemplate)({ beers: beers })
   averageAbv.innerHTML = 'Average ABV ' + getAverageAbv(beers) + ' %'
@@ -19,7 +21,7 @@ function setActiveFilter (active) {
   active.classList.add('btn-active')
 }
 
-function filter (collection, callback) {
+fp.filter = function (collection, callback) {
   var filtered = []
   for (var i = 0; i < collection.length; i++) {
     if (callback(collection[i])) {
@@ -31,13 +33,13 @@ function filter (collection, callback) {
 
 function makeFilter (collection, property) {
   return function (value) {
-    return filter(collection, function (item) {
+    return fp.filter(collection, function (item) {
       return item[property] === value
     })
   }
 }
 
-function map (collection, callback) {
+fp.map = function (collection, callback) {
   var mapped = []
   for (var i = 0; i < collection.length; i++) {
     mapped.push(callback(collection[i]))
@@ -45,7 +47,7 @@ function map (collection, callback) {
   return mapped
 }
 
-function reduce (collection, callback, initial) {
+fp.reduce = function (collection, callback, initial) {
   var last = initial
   for (var i = 0; i < collection.length; i++) {
     last = callback(last, collection[i])
@@ -53,16 +55,16 @@ function reduce (collection, callback, initial) {
   return last
 }
 
-function add (a, b) {
+fp.add = function (a, b) {
   return a + b
 }
 
 function getAverageAbv (beers) {
-  var abvs = map(beers, function (beer) {
+  var abvs = fp.map(beers, function (beer) {
     return beer.abv
   })
 
-  var total = reduce(abvs, add, 0)
+  var total = fp.reduce(abvs, fp.add, 0)
 
   return Math.round((total / beers.length) * 10) / 10
 }
@@ -92,7 +94,7 @@ filters.addEventListener('click', function (e) {
       filteredBeers = filterByLocale('import')
       break
     case 'ale':
-      filteredBeers = filter(allBeers, function (beer) {
+      filteredBeers = fp.filter(allBeers, function (beer) {
         return beer.type === 'ipa' || beer.type === 'ale'
       })
       break

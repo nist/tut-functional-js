@@ -1,25 +1,12 @@
 var beerData = JSON.parse(document.getElementById('beerData').textContent)
 var allBeers = beerData.beers
-var beerTemplate = document.getElementById('tmpl-beer').textContent
+var beerTemplate = document.getElementById('tmpl-beer-groups').textContent
 var beerList = document.getElementById('beerList')
 var averageAbv = document.getElementById('averageAbv')
 var filters = document.getElementById('filters')
 var filterLinks = filters.querySelectorAll('a')
 
 var fp = {}
-
-function loadBeers (beers) {
-  beerList.innerHTML = _.template(beerTemplate)({ beers: beers })
-  averageAbv.innerHTML = 'Average ABV ' + getAverageAbv(beers) + ' %'
-}
-
-function setActiveFilter (active) {
-  for (var i = 0; i < filterLinks.length; i++) {
-    filterLinks[i].classList.remove('btn-active')
-  }
-
-  active.classList.add('btn-active')
-}
 
 fp.filter = function (collection, callback) {
   var filtered = []
@@ -59,6 +46,35 @@ fp.add = function (a, b) {
   return a + b
 }
 
+fp.groupBy = function (collection, callback) {
+  var grouped = {}
+  var groupName
+  for (var i = 0; i < collection.length; i++) {
+    groupName = callback(collection[i])
+    if (!grouped[groupName]) {
+      grouped[groupName] = []
+    }
+    grouped[groupName].push(collection[i])
+  }
+  return grouped
+}
+
+function loadBeers (beers) {
+  var beerGroups = fp.groupBy(beers, function (beer) {
+    return beer.locale
+  })
+  beerList.innerHTML = _.template(beerTemplate)({ beers: beerGroups })
+  averageAbv.innerHTML = 'Average ABV ' + getAverageAbv(beers) + ' %'
+}
+
+function setActiveFilter (active) {
+  for (var i = 0; i < filterLinks.length; i++) {
+    filterLinks[i].classList.remove('btn-active')
+  }
+
+  active.classList.add('btn-active')
+}
+
 function getAverageAbv (beers) {
   var abvs = fp.map(beers, function (beer) {
     return beer.abv
@@ -68,8 +84,6 @@ function getAverageAbv (beers) {
 
   return Math.round((total / beers.length) * 10) / 10
 }
-
-var filterByLocale = makeFilter(allBeers, 'locale')
 
 var filterByType = makeFilter(allBeers, 'type')
 
@@ -86,12 +100,6 @@ filters.addEventListener('click', function (e) {
   switch (filterName) {
     case 'all':
       filteredBeers = allBeers
-      break
-    case 'domestic':
-      filteredBeers = filterByLocale('domestic')
-      break
-    case 'imports':
-      filteredBeers = filterByLocale('import')
       break
     case 'ale':
       filteredBeers = fp.filter(allBeers, function (beer) {

@@ -1,35 +1,35 @@
-var beerData = JSON.parse(document.getElementById("beerData").textContent);
-var allBeers = beerData.beers;
-var beerTemplate = document.getElementById("tmpl-beer").textContent;
-var beerList = document.getElementById("beerList");
+var beerData = JSON.parse(document.getElementById('beerData').textContent)
+var allBeers = beerData.beers
+var beerTemplate = document.getElementById('tmpl-beer').textContent
+var beerList = document.getElementById('beerList')
 var averageAbv = document.getElementById('averageAbv')
-var filters = document.getElementById("filters");
-var filterLinks = filters.querySelectorAll("a");
+var filters = document.getElementById('filters')
+var filterLinks = filters.querySelectorAll('a')
 
-function loadBeers(beers) {
-  beerList.innerHTML = _.template(beerTemplate)({ beers: beers });
+function loadBeers (beers) {
+  beerList.innerHTML = _.template(beerTemplate)({ beers: beers })
   averageAbv.innerHTML = 'Average ABV ' + getAverageAbv(beers) + ' %'
 }
 
-function setActiveFilter(active) {
-  for (i=0; i<filterLinks.length; i++) {
-    filterLinks[i].classList.remove('btn-active');
+function setActiveFilter (active) {
+  for (var i = 0; i < filterLinks.length; i++) {
+    filterLinks[i].classList.remove('btn-active')
   }
 
-  active.classList.add('btn-active');
+  active.classList.add('btn-active')
 }
 
-function filter(collection, callback) {
+function filter (collection, callback) {
   var filtered = []
-  for (i=0; i<collection.length; i++) {
+  for (var i = 0; i < collection.length; i++) {
     if (callback(collection[i])) {
-      filtered.push(collection[i]);
+      filtered.push(collection[i])
     }
   }
   return filtered
 }
 
-function makeFilter(collection, property) {
+function makeFilter (collection, property) {
   return function (value) {
     return filter(collection, function (item) {
       return item[property] === value
@@ -74,36 +74,35 @@ var filterByType = makeFilter(allBeers, 'type')
 loadBeers(allBeers)
 
 filters.addEventListener('click', function (e) {
-  e.preventDefault();
-  var clicked = e.target;
-  var filterName = clicked.dataset.filter;
-  var filteredBeers = [];
-  var i;
+  e.preventDefault()
+  var clicked = e.target
+  var filterName = clicked.dataset.filter
+  var filteredBeers = []
 
   setActiveFilter(clicked)
 
   switch (filterName) {
     case 'all':
-      filteredBeers = allBeers;
-      break;
+      filteredBeers = allBeers
+      break
     case 'domestic':
       filteredBeers = filterByLocale('domestic')
-      break;
+      break
     case 'imports':
       filteredBeers = filterByLocale('import')
-      break;
+      break
     case 'ale':
       filteredBeers = filter(allBeers, function (beer) {
         return beer.type === 'ipa' || beer.type === 'ale'
       })
-      break;
+      break
     case 'lager':
       filteredBeers = filterByType('lager')
-      break;
+      break
     case 'stout':
       filteredBeers = filterByType('stout')
-      break;
+      break
   }
 
   loadBeers(filteredBeers)
-});
+})

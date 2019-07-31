@@ -59,6 +59,19 @@ fp.groupBy = function (collection, callback) {
   return grouped
 }
 
+fp.pluck = function (collection, property) {
+  return collection = fp.map(collection, function (item) {
+    return item[property]
+  })
+}
+
+fp.mean = function (collection, property) {
+  if (property) {
+    collection = fp.pluck(collection, property)
+  }
+  return fp.reduce(collection, fp.add, 0) / collection.length
+}
+
 function loadBeers (beers) {
   var beerGroups = fp.groupBy(beers, function (beer) {
     return beer.locale
@@ -75,14 +88,15 @@ function setActiveFilter (active) {
   active.classList.add('btn-active')
 }
 
+function roundDecimal (number, places) {
+  var factor = Math.pow(10, places)
+  return Math.round(number * factor) / factor
+}
+
 function getAverageAbv (beers) {
-  var abvs = fp.map(beers, function (beer) {
-    return beer.abv
-  })
+  var mean = fp.mean(beers, 'abv')
 
-  var total = fp.reduce(abvs, fp.add, 0)
-
-  return Math.round((total / beers.length) * 10) / 10
+  return roundDecimal(mean, 1)
 }
 
 var filterByType = makeFilter(allBeers, 'type')

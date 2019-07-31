@@ -8,19 +8,9 @@ var filterLinks = filters.querySelectorAll('a')
 
 var fp = {}
 
-fp.filter = function (collection, callback) {
-  var filtered = []
-  for (var i = 0; i < collection.length; i++) {
-    if (callback(collection[i])) {
-      filtered.push(collection[i])
-    }
-  }
-  return filtered
-}
-
 function makeFilter (collection, property) {
   return function (value) {
-    return fp.filter(collection, function (item) {
+    return _.filter(collection, function (item) {
       return item[property] === value
     })
   }
@@ -60,7 +50,7 @@ fp.groupBy = function (collection, callback) {
 }
 
 fp.pluck = function (collection, property) {
-  return collection = fp.map(collection, function (item) {
+  return fp.map(collection, function (item) {
     return item[property]
   })
 }
@@ -116,7 +106,7 @@ filters.addEventListener('click', function (e) {
       filteredBeers = allBeers
       break
     case 'ale':
-      filteredBeers = fp.filter(allBeers, function (beer) {
+      filteredBeers = _.filter(allBeers, function (beer) {
         return beer.type === 'ipa' || beer.type === 'ale'
       })
       break

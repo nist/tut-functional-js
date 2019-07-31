@@ -116,6 +116,9 @@ filters.addEventListener('click', function (e) {
     case 'stout':
       filteredBeers = filterByType('stout')
       break
+    case 'surprise':
+      filteredBeers = [_.sample(allBeers)]
+      break
   }
 
   loadBeers(filteredBeers)

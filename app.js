@@ -10,7 +10,7 @@ var fp = {}
 
 function makeFilter (collection, property) {
   return function (value) {
-    return _.filter(collection, function (item) {
+    return collection.filter(function (item) {
       return item[property] === value
     })
   }
@@ -106,7 +106,7 @@ filters.addEventListener('click', function (e) {
       filteredBeers = allBeers
       break
     case 'ale':
-      filteredBeers = _.filter(allBeers, function (beer) {
+      filteredBeers = allBeers.filter(function (beer) {
         return beer.type === 'ipa' || beer.type === 'ale'
       })
       break
